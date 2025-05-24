@@ -5,10 +5,10 @@ local Window = Rayfield:CreateWindow({
   LoadingTitle = "Hallow Hub",
   LoadingSubtitle = "By Moligrafi",
   Theme = {
-    TextColor = Color3.fromRGB(0, 0, 240),
+    TextColor = Color3.fromRGB(0, 0, 220),
     
-    Background = Color3.fromRGB(25, 255, 25),
-    Topbar = Color3.fromRGB(0, 125, 255),
+    Background = Color3.fromRGB(0, 125, 255),
+    Topbar = Color3.fromRGB(0, 125, 230),
     Shadow = Color3.fromRGB(20, 20, 20),
     
     NotificationBackground = Color3.fromRGB(20, 20, 20),
