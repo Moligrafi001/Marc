@@ -1,33 +1,31 @@
---[[ 
-    test.lua
-    UI Library puramente cliente para Roblox (estilo Rayfield), carregável via loadstring.
-    Cole este arquivo em um repositório (por exemplo, GitHub) e use:
-    
-    local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/test.lua"))()
-    local UILib = Library.Init()
-    
-    Depois, crie janelas e componentes normalmente:
-    local window = UILib:CreateWindow({ Title = "Minha Janela" })
-    -- etc.
---]]
+--[[
+test_refined.lua
+UI Library puramente cliente para Roblox (estilo Rayfield), carregável via loadstring.
+Use:
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/test_refined.lua"))()
+local UILib = Library.Init()
+Depois, crie janelas e componentes normalmente:
+local window = UILib:CreateWindow({ Title = "Minha Janela" })
+-- etc.
+]]
 
 local UILibrary = {}
 UILibrary.__index = UILibrary
 
 -- Tema padrão (cores, fontes)
 local DefaultTheme = {
-    PrimaryColor       = Color3.fromRGB(35, 35, 35),
-    SecondaryColor     = Color3.fromRGB(25, 25, 25),
-    AccentColor        = Color3.fromRGB(0, 170, 255),
-    FontColor          = Color3.fromRGB(255, 255, 255),
-    ToggleOnColor      = Color3.fromRGB(0, 200, 0),
-    ToggleOffColor     = Color3.fromRGB(200, 0, 0),
-    SliderBackground   = Color3.fromRGB(50, 50, 50),
-    SliderFillColor    = Color3.fromRGB(0, 170, 255),
-    DropdownBGColor    = Color3.fromRGB(30, 30, 30),
-    DropdownHoverColor = Color3.fromRGB(50, 50, 50),
-    Font               = Enum.Font.SourceSansBold,
-    TextSize           = 14,
+    PrimaryColor      = Color3.fromRGB(35, 35, 35),
+    SecondaryColor    = Color3.fromRGB(25, 25, 25),
+    AccentColor       = Color3.fromRGB(0, 170, 255),
+    FontColor         = Color3.fromRGB(255, 255, 255),
+    ToggleOnColor     = Color3.fromRGB(0, 200, 0),
+    ToggleOffColor    = Color3.fromRGB(200, 0, 0),
+    SliderBackground  = Color3.fromRGB(50, 50, 50),
+    SliderFillColor   = Color3.fromRGB(0, 170, 255),
+    DropdownBGColor   = Color3.fromRGB(30, 30, 30),
+    DropdownHoverColor= Color3.fromRGB(50, 50, 50),
+    Font              = Enum.Font.SourceSansBold,
+    TextSize          = 14,
 }
 
 -- Helper para criar instâncias com propriedades
@@ -45,13 +43,9 @@ end
 local function MakeDraggable(frame, dragHandle)
     dragHandle = dragHandle or frame
     local dragging, dragInput, dragStart, startPos
-
     local function update(input)
         local delta = input.Position - dragStart
-        frame.Position = UDim2.new(
-            0, startPos.X + delta.X,
-            0, startPos.Y + delta.Y
-        )
+        frame.Position = UDim2.new(0, startPos.X + delta.X, 0, startPos.Y + delta.Y)
     end
 
     dragHandle.InputBegan:Connect(function(input)
@@ -59,7 +53,6 @@ local function MakeDraggable(frame, dragHandle)
             dragging = true
             dragStart = input.Position
             startPos = Vector2.new(frame.Position.X.Offset, frame.Position.Y.Offset)
-
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
@@ -86,7 +79,7 @@ local function CreateScreenGui()
     local screenGui = New("ScreenGui", {
         Name = "UILibraryClientScreen",
         ResetOnSpawn = false,
-        ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
     })
     if game:GetService("RunService"):IsStudio() then
         screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -109,18 +102,21 @@ function UILibrary:CreateWindow(opts)
         Name               = titleText .. "_Window",
         Size               = UDim2.new(0, width, 0, height),
         Position           = UDim2.new(0.5, -width/2, 0.5, -height/2),
-        BackgroundColor3    = theme.PrimaryColor,
-        BorderSizePixel     = 0,
-        ClipsDescendants    = true,
+        BackgroundColor3   = theme.PrimaryColor,
+        BorderSizePixel    = 0,
+        ClipsDescendants   = true,
     })
+    New("UICorner", { Parent = windowFrame, CornerRadius = UDim.new(0, 6) })
 
     -- Título e barra de arraste
     local titleBar = New("Frame", {
-        Name               = "TitleBar",
-        Size               = UDim2.new(1, 0, 0, 30),
-        BackgroundColor3    = theme.SecondaryColor,
-        Parent             = windowFrame,
+        Name             = "TitleBar",
+        Size             = UDim2.new(1, 0, 0, 30),
+        BackgroundColor3 = theme.SecondaryColor,
+        Parent           = windowFrame,
     })
+    New("UICorner", { Parent = titleBar, CornerRadius = UDim.new(0, 6) })
+
     local titleLabel = New("TextLabel", {
         Name               = "TitleLabel",
         Size               = UDim2.new(1, -10, 1, 0),
@@ -133,19 +129,21 @@ function UILibrary:CreateWindow(opts)
         TextXAlignment     = Enum.TextXAlignment.Left,
         Parent             = titleBar,
     })
+
     -- Botão de fechar (X)
     local closeButton = New("TextButton", {
-        Name               = "CloseButton",
-        Size               = UDim2.new(0, 25, 0, 25),
-        Position           = UDim2.new(1, -30, 0, 2),
-        BackgroundColor3    = theme.AccentColor,
-        Text               = "X",
-        Font               = theme.Font,
-        TextSize           = theme.TextSize,
-        TextColor3         = theme.FontColor,
-        AutoButtonColor    = false,
-        Parent             = titleBar,
+        Name             = "CloseButton",
+        Size             = UDim2.new(0, 25, 0, 25),
+        Position         = UDim2.new(1, -30, 0, 2),
+        BackgroundColor3 = theme.AccentColor,
+        Text             = "X",
+        Font             = theme.Font,
+        TextSize         = theme.TextSize,
+        TextColor3       = theme.FontColor,
+        AutoButtonColor  = false,
+        Parent           = titleBar,
     })
+    New("UICorner", { Parent = closeButton, CornerRadius = UDim.new(0, 4) })
     closeButton.MouseEnter:Connect(function()
         closeButton.BackgroundColor3 = theme.ToggleOnColor
     end)
@@ -167,10 +165,10 @@ function UILibrary:CreateWindow(opts)
         Parent             = windowFrame,
     })
     local uiListLayout = New("UIListLayout", {
-        Name      = "ListLayout",
-        Parent    = contentFrame,
-        Padding   = UDim.new(0, 8),
-        SortOrder = Enum.SortOrder.LayoutOrder,
+        Name       = "ListLayout",
+        Parent     = contentFrame,
+        Padding    = UDim.new(0, 8),
+        SortOrder  = Enum.SortOrder.LayoutOrder,
     })
     uiListLayout.Changed:Connect(function()
         contentFrame.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y + 10)
@@ -184,10 +182,10 @@ function UILibrary:CreateWindow(opts)
 
     -- Objeto da janela com métodos para adicionar componentes
     local windowObj = {
-        Frame       = windowFrame,
-        Content     = contentFrame,
-        Theme       = theme,
-        LayoutOrder = 1,
+        Frame        = windowFrame,
+        Content      = contentFrame,
+        Theme        = theme,
+        LayoutOrder  = 1,
     }
 
     -- Adiciona seção (header)
@@ -211,16 +209,18 @@ function UILibrary:CreateWindow(opts)
     -- Adiciona botão
     function windowObj:AddButton(opts)
         opts = opts or {}
-        local btnText = opts.Text or "Botão"
+        local btnText  = opts.Text or "Botão"
         local callback = opts.Callback or function() end
 
         local btnFrame = New("Frame", {
             Name               = "Button_" .. tostring(self.LayoutOrder),
             Size               = UDim2.new(1, -20, 0, 30),
-            BackgroundColor3    = self.Theme.SecondaryColor,
+            BackgroundColor3   = self.Theme.SecondaryColor,
             LayoutOrder        = self.LayoutOrder,
             Parent             = self.Content,
         })
+        New("UICorner", { Parent = btnFrame, CornerRadius = UDim.new(0, 4) })
+
         local btn = New("TextButton", {
             Name               = "Btn",
             Size               = UDim2.new(1, 0, 1, 0),
@@ -249,7 +249,7 @@ function UILibrary:CreateWindow(opts)
     -- Adiciona toggle (checkbox)
     function windowObj:AddToggle(opts)
         opts = opts or {}
-        local toggText = opts.Text or "Toggle"
+        local toggText = opts.Text    or "Toggle"
         local default   = opts.Default or false
         local callback  = opts.Callback or function(state) end
 
@@ -260,6 +260,7 @@ function UILibrary:CreateWindow(opts)
             LayoutOrder        = self.LayoutOrder,
             Parent             = self.Content,
         })
+
         local label = New("TextLabel", {
             Name               = "ToggleLabel",
             Size               = UDim2.new(0.8, 0, 1, 0),
@@ -271,19 +272,19 @@ function UILibrary:CreateWindow(opts)
             TextXAlignment     = Enum.TextXAlignment.Left,
             Parent             = toggleFrame,
         })
+
         local box = New("Frame", {
             Name               = "Checkbox",
             Size               = UDim2.new(0, 20, 0, 20),
             Position           = UDim2.new(0.85, 0, 0, 2),
-            BackgroundColor3    = default and self.Theme.ToggleOnColor or self.Theme.ToggleOffColor,
+            BackgroundColor3   = default and self.Theme.ToggleOnColor or self.Theme.ToggleOffColor,
             Parent             = toggleFrame,
         })
         New("UICorner", { Parent = box, CornerRadius = UDim.new(0, 4) })
 
         local state = default
-
         local function updateVisual()
-            box.BackgroundColor3 = state and UILibrary.Theme.ToggleOnColor or UILibrary.Theme.ToggleOffColor
+            box.BackgroundColor3 = state and self.Theme.ToggleOnColor or self.Theme.ToggleOffColor
         end
 
         box.InputBegan:Connect(function(input)
@@ -293,21 +294,25 @@ function UILibrary:CreateWindow(opts)
                 pcall(callback, state)
             end
         end)
-
         updateVisual()
         self.LayoutOrder = self.LayoutOrder + 1
         return {
-            GetState = function() return state end,
-            SetState = function(val) state = val; updateVisual() end,
+            GetState = function()
+                return state
+            end,
+            SetState = function(val)
+                state = val
+                updateVisual()
+            end,
         }
     end
 
     -- Adiciona slider
     function windowObj:AddSlider(opts)
         opts = opts or {}
-        local text     = opts.Text or "Slider"
-        local min      = opts.Min or 0
-        local max      = opts.Max or 100
+        local text     = opts.Text    or "Slider"
+        local min      = opts.Min     or 0
+        local max      = opts.Max     or 100
         local default  = opts.Default or min
         local callback = opts.Callback or function(val) end
 
@@ -318,6 +323,7 @@ function UILibrary:CreateWindow(opts)
             LayoutOrder        = self.LayoutOrder,
             Parent             = self.Content,
         })
+
         local label = New("TextLabel", {
             Name               = "SliderLabel",
             Size               = UDim2.new(1, 0, 0, 14),
@@ -329,30 +335,35 @@ function UILibrary:CreateWindow(opts)
             TextXAlignment     = Enum.TextXAlignment.Left,
             Parent             = sliderFrame,
         })
-        local barBg = New("Frame", {
-            Name               = "BarBg",
-            Size               = UDim2.new(1, -40, 0, 6),
-            Position           = UDim2.new(0, 0, 0, 18),
-            BackgroundColor3    = self.Theme.SliderBackground,
-            Parent             = sliderFrame,
-        })
-        local barFill = New("Frame", {
-            Name               = "BarFill",
-            Size               = UDim2.new((default - min)/(max - min), 0, 1, 0),
-            BackgroundColor3    = self.Theme.SliderFillColor,
-            Parent             = barBg,
-        })
-        local handle = New("ImageLabel", {
-            Name               = "Handle",
-            Size               = UDim2.new(0, 18, 0, 18),
-            Position           = UDim2.new((default - min)/(max - min), -9, 0.5, -9),
-            BackgroundTransparency = 1,
-            Image              = "rbxassetid://3926305904",
-            ImageColor3        = self.Theme.AccentColor,
-            Parent             = barBg,
-        })
-        local dragging = false
 
+        local barBg = New("Frame", {
+            Name             = "BarBg",
+            Size             = UDim2.new(1, -40, 0, 6),
+            Position         = UDim2.new(0, 0, 0, 18),
+            BackgroundColor3 = self.Theme.SliderBackground,
+            Parent           = sliderFrame,
+        })
+        New("UICorner", { Parent = barBg, CornerRadius = UDim.new(0, 3) })
+
+        local barFill = New("Frame", {
+            Name             = "BarFill",
+            Size             = UDim2.new((default - min)/(max - min), 0, 1, 0),
+            BackgroundColor3 = self.Theme.SliderFillColor,
+            Parent           = barBg,
+        })
+        New("UICorner", { Parent = barFill, CornerRadius = UDim.new(0, 3) })
+
+        local handle = New("ImageLabel", {
+            Name             = "Handle",
+            Size             = UDim2.new(0, 18, 0, 18),
+            Position         = UDim2.new((default - min)/(max - min), -9, 0.5, -9),
+            BackgroundTransparency = 1,
+            Image            = "rbxassetid://3926305904",
+            ImageColor3      = self.Theme.AccentColor,
+            Parent           = barBg,
+        })
+
+        local dragging = false
         local function updateValue(x)
             local relative = math.clamp((x - barBg.AbsolutePosition.X) / barBg.AbsoluteSize.X, 0, 1)
             local value = math.floor(min + (max - min) * relative + 0.5)
@@ -397,7 +408,7 @@ function UILibrary:CreateWindow(opts)
     -- Adiciona dropdown
     function windowObj:AddDropdown(opts)
         opts = opts or {}
-        local text     = opts.Text or "Dropdown"
+        local text     = opts.Text    or "Dropdown"
         local choices  = opts.Choices or {}
         local callback = opts.Callback or function(selected) end
         local default  = opts.Default or choices[1] or ""
@@ -409,6 +420,7 @@ function UILibrary:CreateWindow(opts)
             LayoutOrder        = self.LayoutOrder,
             Parent             = self.Content,
         })
+
         local label = New("TextLabel", {
             Name               = "DropdownLabel",
             Size               = UDim2.new(1, -100, 1, 0),
@@ -420,11 +432,12 @@ function UILibrary:CreateWindow(opts)
             TextXAlignment     = Enum.TextXAlignment.Left,
             Parent             = dropdownFrame,
         })
+
         local current = New("TextButton", {
             Name               = "CurrentChoice",
             Size               = UDim2.new(0, 100, 1, 0),
             Position           = UDim2.new(1, -100, 0, 0),
-            BackgroundColor3    = self.Theme.SecondaryColor,
+            BackgroundColor3   = self.Theme.SecondaryColor,
             Text               = tostring(default),
             Font               = self.Theme.Font,
             TextSize           = self.Theme.TextSize,
@@ -432,6 +445,7 @@ function UILibrary:CreateWindow(opts)
             AutoButtonColor    = false,
             Parent             = dropdownFrame,
         })
+        New("UICorner", { Parent = current, CornerRadius = UDim.new(0, 4) })
         current.MouseEnter:Connect(function()
             current.BackgroundColor3 = self.Theme.PrimaryColor
         end)
@@ -443,19 +457,19 @@ function UILibrary:CreateWindow(opts)
             Name               = "ListFrame",
             Size               = UDim2.new(0, 100, 0, #choices * 24),
             Position           = UDim2.new(1, -100, 1, 2),
-            BackgroundColor3    = self.Theme.DropdownBGColor,
+            BackgroundColor3   = self.Theme.DropdownBGColor,
             Visible            = false,
             Parent             = dropdownFrame,
         })
+        New("UICorner", { Parent = listFrame, CornerRadius = UDim.new(0, 4) })
+
         local listLayout = New("UIListLayout", { Parent = listFrame, SortOrder = Enum.SortOrder.LayoutOrder })
-
         local selectedValue = default
-
         for i, choice in ipairs(choices) do
             local item = New("TextButton", {
                 Name               = "Choice_" .. i,
                 Size               = UDim2.new(1, 0, 0, 24),
-                BackgroundColor3    = self.Theme.DropdownBGColor,
+                BackgroundColor3   = self.Theme.DropdownBGColor,
                 Text               = tostring(choice),
                 Font               = self.Theme.Font,
                 TextSize           = self.Theme.TextSize,
@@ -484,7 +498,9 @@ function UILibrary:CreateWindow(opts)
 
         self.LayoutOrder = self.LayoutOrder + 1
         return {
-            GetValue = function() return selectedValue end,
+            GetValue = function()
+                return selectedValue
+            end,
             SetValue = function(val)
                 if table.find(choices, val) then
                     selectedValue = val
@@ -499,9 +515,11 @@ end
 
 -- Inicialização da biblioteca
 function UILibrary.Init()
-    if UILibrary.ScreenGui then return UILibrary end
+    if UILibrary.ScreenGui then
+        return UILibrary
+    end
     UILibrary.ScreenGui = CreateScreenGui()
-    UILibrary.Theme = DefaultTheme
+    UILibrary.Theme     = DefaultTheme
     return UILibrary
 end
 
