@@ -9,7 +9,7 @@ local Window = Rayfield:CreateWindow({
     
     Background = Color3.fromRGB(0, 125, 255),
     Topbar = Color3.fromRGB(0, 125, 230),
-    Shadow = Color3.fromRGB(20, 20, 20),
+    Shadow = Color3.fromRGB(0, 20, 40),
     
     NotificationBackground = Color3.fromRGB(20, 20, 20),
     NotificationActionsBackground = Color3.fromRGB(230, 230, 230),
