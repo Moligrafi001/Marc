@@ -1,6 +1,6 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 local Window = Rayfield:CreateWindow({
-  Name = "Hallow Hub | Skinwalkers [ HORROR ]",
+  Name = "Hallow Hub | Testing Rayfield Theme",
   Icon = 17091459839,
   LoadingTitle = "Hallow Hub",
   LoadingSubtitle = "By Moligrafi",
