@@ -14,7 +14,7 @@ async function CNPJ(cnpj) {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Erro ao buscar CEP:", error);
+    console.error("Erro ao buscar CNPJ:", error);
     return false;
   };
 };
@@ -24,7 +24,7 @@ async function IP(ip) {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Erro ao buscar CEP:", error);
+    console.error("Erro ao buscar IP:", error);
     return false;
   };
 };
